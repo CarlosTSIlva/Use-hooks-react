@@ -1,16 +1,18 @@
 import Head from "next/head";
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { SearchResults } from "../components/SearchResults";
 
 interface ProductProps {
-  id: number;
-  price: number;
-  title: string;
+  data: any[];
+  totalPrice: number;
 }
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState<ProductProps[]>();
+  const [results, setResults] = useState<ProductProps>({
+    totalPrice: 0,
+    data: [],
+  });
 
   const handleSearch = async (event: FormEvent) => {
     event.preventDefault();
@@ -20,10 +22,32 @@ export default function Home() {
     }
 
     const response = await fetch(`http://localhost:3334/products?q=${search}`);
-    console.log(response);
     const data = await response.json();
-    setResults(data);
+
+    const formatter = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    const products = data.map((product) => {
+      return {
+        id: product.oid,
+        title: product.title,
+        price: product.price,
+        priceFormatted: formatter.format(product.price),
+      };
+    });
+
+    const totalPrice = data.results?.reduce((total, product) => {
+      return total + product.price;
+    }, 0);
+
+    setResults({ totalPrice, data: products });
   };
+
+  const haddToWishList = useCallback(async (id: number) => {
+    console.log(id);
+  }, []);
 
   return (
     <div>
@@ -41,7 +65,11 @@ export default function Home() {
           <button type="submit">Buscas</button>
         </form>
 
-        <SearchResults results={results} />
+        <SearchResults
+          onAddToWishList={haddToWishList}
+          results={results.data}
+          totalPrice={results.totalPrice}
+        />
       </div>
     </div>
   );
