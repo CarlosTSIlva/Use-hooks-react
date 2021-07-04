@@ -9,12 +9,17 @@
     "server": "json-server -d 750 -w -p 3334 ./db-1623719139963.json"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^11.0.1",
+    "@types/lodash": "^4.14.170",
+    "@types/react-virtualized": "^9.21.11",
     "date-fns": "^2.11.1",
     "gray-matter": "^4.0.2",
     "json-server": "^0.16.3",
+    "lodash": "^4.17.21",
     "next": "^10.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-virtualized": "^9.22.3",
     "remark": "^12.0.0",
     "remark-html": "^12.0.0"
   },

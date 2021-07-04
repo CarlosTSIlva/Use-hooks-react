@@ -23,7 +23,6 @@ export default function Home() {
 
     const response = await fetch(`http://localhost:3334/products?q=${search}`);
     const data = await response.json();
-
     const formatter = new Intl.NumberFormat("pt-BR", {
       style: "currency",
       currency: "BRL",
@@ -31,14 +30,14 @@ export default function Home() {
 
     const products = data.map((product) => {
       return {
-        id: product.oid,
+        id: product.id,
         title: product.title,
         price: product.price,
         priceFormatted: formatter.format(product.price),
       };
     });
 
-    const totalPrice = data.results?.reduce((total, product) => {
+    const totalPrice = products.reduce((total, product) => {
       return total + product.price;
     }, 0);
 
